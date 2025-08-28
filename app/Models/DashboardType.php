@@ -13,115 +13,58 @@ class DashboardType extends Model
 
     protected $fillable = [
         'type',
-        'name',
+        'name', 
         'description',
-        'theme_config',
+        'database_strategy',
+        'database_config',
         'auth_methods',
+        'theme_config',
         'settings',
+        'has_landing_page',
         'is_active',
     ];
 
     protected $casts = [
-        'theme_config' => 'array',
+        'database_config' => 'array',
         'auth_methods' => 'array',
+        'theme_config' => 'array',
         'settings' => 'array',
+        'has_landing_page' => 'boolean',
         'is_active' => 'boolean',
     ];
 
-    /**
-     * Get activity log options
-     */
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['type', 'name', 'is_active', 'theme_config', 'auth_methods'])
+            ->logOnly(['type', 'name', 'is_active', 'database_strategy'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
     }
 
-    /**
-     * Get the route prefix for this dashboard type
-     */
     public function getRoutePrefix(): string
     {
         return $this->type;
     }
 
-    /**
-     * Get the guard name for this dashboard type
-     */
-    public function getGuardName(): string
+    public function getDatabaseConnection(): string
     {
-        return $this->type;
+        if ($this->database_strategy === 'separate') {
+            return $this->database_config['connection_name'] ?? 'mysql';
+        }
+        
+        return 'mysql';
     }
 
-    /**
-     * Get the API guard name for this dashboard type
-     */
-    public function getApiGuardName(): string
+    public function getTablePrefix(): string
     {
-        return "api-{$this->type}";
+        if ($this->database_strategy === 'shared') {
+            return $this->database_config['prefix'] ?? $this->type . '_';
+        }
+        
+        return '';
     }
 
-    /**
-     * Check if SMS authentication is enabled
-     */
-    public function hasSmsAuth(): bool
-    {
-        return in_array('sms', $this->auth_methods ?? []);
-    }
-
-    /**
-     * Check if email authentication is enabled
-     */
-    public function hasEmailAuth(): bool
-    {
-        return in_array('email', $this->auth_methods ?? []);
-    }
-
-    /**
-     * Get theme configuration with defaults
-     */
-    public function getThemeConfigAttribute($value)
-    {
-        $defaults = [
-            'primary_color' => '#3b82f6',
-            'secondary_color' => '#64748b',
-            'sidebar_color' => '#ffffff',
-            'text_color' => '#1f2937',
-            'background_color' => '#f9fafb',
-            'dark_mode' => false,
-            'logo_url' => null,
-            'favicon_url' => null,
-        ];
-
-        $config = json_decode($value, true) ?? [];
-        return array_merge($defaults, $config);
-    }
-
-    /**
-     * Set theme configuration
-     */
-    public function setThemeConfigAttribute($value)
-    {
-        $this->attributes['theme_config'] = json_encode($value);
-    }
-
-    /**
-     * Get users count for this dashboard type
-     * This is a placeholder method since users are in separate databases
-     */
-    public function users()
-    {
-        // Since users are in separate databases per dashboard type,
-        // we'll return a dummy relation that always returns 0 count
-        return $this->hasMany(User::class, 'dashboard_type_id')->where('id', 0);
-    }
-
-    /**
-     * Get actual users count for this dashboard type
-     */
-    public function getUsersCountAttribute(): int
+    public function getUsersCount(): int
     {
         try {
             $userModelClass = "App\\Models\\{$this->getModelNamespace()}\\User";
@@ -136,11 +79,18 @@ class DashboardType extends Model
         }
     }
 
-    /**
-     * Get model namespace for this dashboard type
-     */
     public function getModelNamespace(): string
     {
         return ucfirst($this->type);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function scopeByStrategy($query, $strategy)
+    {
+        return $query->where('database_strategy', $strategy);
     }
 }

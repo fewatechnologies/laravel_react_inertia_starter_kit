@@ -40,16 +40,20 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        
+
         // Test Dashboard Guards
         'test' => [
             'driver' => 'session',
             'provider' => 'test_users',
         ],
-        
+
         'api-test' => [
             'driver' => 'jwt',
             'provider' => 'test_users',
+        ],
+        'master-admin' => [
+            'driver' => 'session',
+            'provider' => 'master-admin-users',
         ],
     ],
 
@@ -76,15 +80,10 @@ return [
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
-        'test_users' => [
+        'master-admin-users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Test\User::class,
+            'model' => App\Models\MasterAdmin\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
