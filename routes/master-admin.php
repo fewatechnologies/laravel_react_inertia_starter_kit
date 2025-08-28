@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\MasterAdmin\AuthController;
 use App\Http\Controllers\MasterAdmin\DashboardController;
+use App\Http\Controllers\MasterAdmin\SystemController;
 use Illuminate\Support\Facades\Route;
 
 // Master Admin Authentication Routes
@@ -15,5 +16,6 @@ Route::prefix('master-admin')->name('master-admin.')->group(function () {
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::patch('dashboards/{id}/toggle', [DashboardController::class, 'toggleDashboard'])->name('dashboards.toggle');
+         Route::get('settings', [SystemController::class, 'index'])->name('settings');
     });
 });

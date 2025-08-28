@@ -9,3 +9,4 @@ Route::get('/user', function (Request $request) {
 
 // Dynamic dashboard API routes
 require __DIR__ . '/api/test.php';
+require __DIR__.'/api/clinic.php';

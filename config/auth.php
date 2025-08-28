@@ -40,21 +40,15 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-
-        // Test Dashboard Guards
-        'test' => [
-            'driver' => 'session',
-            'provider' => 'test_users',
-        ],
-
-        'api-test' => [
-            'driver' => 'jwt',
-            'provider' => 'test_users',
-        ],
         'master-admin' => [
             'driver' => 'session',
             'provider' => 'master-admin-users',
         ],
+        // In the guards array, add:
+        // 'your-dashboard-type' => [
+        //     'driver' => 'session',
+        //     'provider' => 'your-dashboard-type-users',
+        // ],
     ],
 
     /*
@@ -84,6 +78,11 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\MasterAdmin\User::class,
         ],
+
+        // 'your-dashboard-type-users' => [
+        //     'driver' => 'eloquent',
+        //     'model' => App\Models\YourDashboardType\User::class,
+        // ],
     ],
 
     /*

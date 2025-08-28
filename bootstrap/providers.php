@@ -2,5 +2,5 @@
 
 return [
     App\Providers\AppServiceProvider::class,
-    App\Providers\MultiDashboardServiceProvider::class,
+    App\Providers\DashboardServiceProvider::class,
 ];

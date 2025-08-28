@@ -42,9 +42,9 @@ return [
     */
 
     'aakash_sms' => [
-        'base_url' => env('AAKASH_SMS_BASE_URL', 'https://sms.aakashsms.com/sms/'),
         'token' => env('AAKASH_SMS_TOKEN'),
-        'test_phone' => env('TEST_PHONE_NUMBER', '9843223774'),
+        'from' => env('AAKASH_SMS_FROM', 'AT-ALERT'),
+        'test_phone' => env('AAKASH_SMS_TEST_PHONE', '9843223774'),
     ],
 
 ];

@@ -20,3 +20,4 @@ use Illuminate\Support\Facades\Route;
 // Dynamic dashboard routes will be loaded here
 // This file will be updated automatically when dashboards are created
 require __DIR__.'/master-admin.php';
+require __DIR__.'/clinic.php';
